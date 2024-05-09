@@ -106,7 +106,9 @@ class TransportationSolver(QWidget):
         buttons_layout.addWidget(solve_button)
 
 
-        #reset
+
+
+ #reset
         reset_btn = QPushButton('reset data', self)
         reset_btn.setFixedSize(250, 50)
         reset_btn.setCursor(Qt.PointingHandCursor)  
@@ -125,6 +127,11 @@ class TransportationSolver(QWidget):
         reset_btn.clicked.connect(self.reset_data)
         buttons_layout.addWidget(reset_btn)
         result_layout.addLayout(buttons_layout)
+
+
+
+
+
 
 
         # Output Text Area
@@ -149,7 +156,6 @@ class TransportationSolver(QWidget):
     
     def gotoHome(self):
         self.parent.stack.setCurrentIndex(0)
-
     def solve_transportation(self):
         try:
             supply = list(map(int, self.supply_input.text().split(',')))
