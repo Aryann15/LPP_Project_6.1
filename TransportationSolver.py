@@ -149,3 +149,63 @@ class TransportationSolver(QWidget):
     
     def gotoHome(self):
         self.parent.stack.setCurrentIndex(0)
+
+    def solve_transportation(self):
+        try:
+            supply = list(map(int, self.supply_input.text().split(',')))
+            demand = list(map(int, self.demand_input.text().split(',')))
+            if not (all_positive(supply)):
+                raise InvalidInputError("Supply Capacities must be all positive")
+            if not (all_positive(demand)):
+                raise InvalidInputError("Demand Capacities must be all positive")
+            cost_dict = {}
+            cost_rows = self.cost_input.text().strip().split(';')
+            if not (cost_rows[-1]):
+                cost_rows = cost_rows[1:-2]
+            for i, row in enumerate(cost_rows):
+                costs = list(map(int, row.split(',')))
+                if not (all_positive(costs)):
+                    raise InvalidInputError("costs Capacities must be all positive")
+                for j, cost in enumerate(costs):
+                    cost_dict[(i, j)] = cost
+
+            # Gurobi Solver Integration
+            model = Model("Transportation")
+            num_sources = len(supply)
+            num_destinations = len(demand)
+            x = model.addVars(num_sources, num_destinations, obj=cost_dict, name="x", vtype=GRB.CONTINUOUS)
+            model.modelSense = GRB.MINIMIZE
+
+            for i in range(num_sources):
+                model.addConstr(sum(x[i, j] for j in range(num_destinations)) <= supply[i], f"supply_{i}")
+
+            for j in range(num_destinations):
+                model.addConstr(sum(x[i, j] for i in range(num_sources)) >= demand[j], f"demand_{j}")
+
+            model.optimize()
+
+            if model.status == GRB.OPTIMAL:
+                result = f"Optimal Cost: {model.objVal}\n"
+                for i in range(num_sources):
+                    for j in range(num_destinations):
+                        if x[i, j].X > 0.001:
+                            result += f"Ship {x[i, j].X:.2f} units from Source {i} to Destination {j}\n"
+                self.output_area.setText(result)
+            else:
+                self.output_area.setText("No feasible solution found.")
+        
+        except InvalidInputError as e:
+            QMessageBox.critical(self, "Invalid Input Error", str(e))
+        except Exception as e:
+            QMessageBox.critical(self, "Input Error", "Failed to solve the problem: " + str(e))
+
+    def reset_data(self):
+            self.cost_input.clear()
+            self.supply_input.clear()
+            self.demand_input.clear()
+            self.output_area.clear()
+
+class InvalidInputError(Exception):
+    pass
+
+all_positive = lambda lst: all(value >= 0 for value in lst)
