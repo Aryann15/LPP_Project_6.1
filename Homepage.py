@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton
+from PyQt5.QtWidgets import QWidget,QHBoxLayout, QPushButton, QVBoxLayout,QLabel
 from PyQt5.QtCore import Qt
 
 class HomePage(QWidget):
@@ -44,7 +44,7 @@ class HomePage(QWidget):
             "}"
         )
         btn_knapsack.clicked.connect(lambda: self.parent.show_page("Knapsack"))
-   
+        
         btn_transportation = QPushButton('Transportation Problem')
         btn_transportation.setFixedSize(300, 70)
         btn_transportation.setCursor(Qt.PointingHandCursor)  
@@ -79,3 +79,5 @@ class HomePage(QWidget):
         main_layout.setContentsMargins(50, 0, 50, 50) 
 
         self.setLayout(main_layout)
+
+
