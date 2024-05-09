@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QTextEdit
+from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QTextEdit, QMessageBox
 from gurobipy import Model, GRB
 from PyQt5.QtCore import Qt
 
@@ -37,6 +37,7 @@ class KnapsackSolver(QWidget):
         back_button.clicked.connect(self.gotoHome)
         back_layout.addWidget(back_button)
         back_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
         # Input
         self.capacity_input = QLineEdit("7")
         self.weights_input = QLineEdit("2,5,4,3")
@@ -148,3 +149,46 @@ class KnapsackSolver(QWidget):
         self.weights_input.clear()
         self.values_input.clear()
         self.outputArea.clear()
+
+
+
+    def solve_knapsack(self):
+        try:
+            values = list(map(int, self.values_input.text().split(',')))
+            weights = list(map(int, self.weights_input.text().split(',')))
+            capacity = int(self.capacity_input.text())
+            n = len(values)
+            n2 = len(weights)
+            # Input Validation
+            if not (n2 == n):
+                raise InvalidInputError("Weights and Values must be of equal lengths")
+            
+            if not (all_positive(values)):
+                raise InvalidInputError("Values must be all positive")
+            
+            if not (all_positive(weights)):
+                raise InvalidInputError("Weights must be all positive")
+
+            m = Model("knapsack")
+            x = m.addVars(n, vtype=GRB.BINARY, name="x")
+            m.setObjective(sum(values[i] * x[i] for i in range(n)), GRB.MAXIMIZE)
+            m.addConstr(sum(weights[i] * x[i] for i in range(n)) <= capacity, "capacity")
+            m.optimize()
+
+            if m.status == GRB.OPTIMAL and m.objVal > 0:
+                result = f"Optimal value: {m.objVal}\nSelected items:\n"
+                for i in range(n):
+                    if x[i].X > 0.5:  # If x[i] is 1
+                        result += f"Item {i} - Value: {values[i]}, Weight: {weights[i]}\n"
+                self.outputArea.setText(result)
+            else:
+                self.outputArea.setText("No optimal solution found.")
+        except InvalidInputError as e:
+            QMessageBox.critical(self, "Invalid Input Error", str(e))
+        except Exception as e:
+            QMessageBox.critical(self, "Error", "Failed to solve the problem: " + str(e))
+
+class InvalidInputError(Exception):
+    pass
+
+all_positive = lambda lst: all(value >= 0 for value in lst)
