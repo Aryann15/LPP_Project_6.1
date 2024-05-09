@@ -14,6 +14,15 @@ class MainApp(QMainWindow):
         self.home_page = HomePage(self)
         self.knapsack_solver = KnapsackSolver(self)
 
+
+    def show_page(self, page_name):
+        if page_name == "Home":
+            self.stack.setCurrentIndex(0)
+        elif page_name == "Knapsack":
+            self.stack.setCurrentIndex(1)
+        elif page_name == "Transportation":
+            self.stack.setCurrentIndex(2)
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = MainApp()
