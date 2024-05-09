@@ -37,3 +37,114 @@ class KnapsackSolver(QWidget):
         back_button.clicked.connect(self.gotoHome)
         back_layout.addWidget(back_button)
         back_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # Input
+        self.capacity_input = QLineEdit("7")
+        self.weights_input = QLineEdit("2,5,4,3")
+        self.values_input = QLineEdit("20,30,40,50")
+
+        self.capacity_input.setStyleSheet(
+           "QLineEdit {"
+            "   padding: 7px;"
+            "   border: 3px solid #A1D1E9;"
+            "   border-radius: 10px;"
+            "   font-size: 16px;"
+            "}"
+        )
+
+        self.weights_input.setStyleSheet(
+            "QLineEdit {"
+            "   padding: 7px;"
+            "   border: 3px solid #A1D1E9;"
+            "   border-radius: 10px;"
+            "   font-size: 16px;"
+            "}"
+        )
+
+        self.values_input.setStyleSheet(
+            "QLineEdit {"
+            "   padding: 7px;"
+            "   border: 3px solid #A1D1E9;"
+            "   border-radius: 10px;"
+            "   font-size: 16px;"
+            "}"
+        )
+        input_layout.setContentsMargins(0, 20, 0, 0)
+        input_layout.addWidget(QLabel("Knapsack Capacity (kg):"))
+        input_layout.addWidget(self.capacity_input)
+        input_layout.addWidget(QLabel("Item Values (comma-separated):"))
+        input_layout.addWidget(self.values_input)
+        input_layout.addWidget(QLabel("Item Weights (comma-separated):"))
+        input_layout.addWidget(self.weights_input)
+
+        # Solve
+        solve_kp_btn = QPushButton('Solve Knapsack', self)
+        solve_kp_btn.setFixedSize(250, 50)
+        solve_kp_btn.setCursor(Qt.PointingHandCursor)  
+        solve_kp_btn.setStyleSheet(
+             "QPushButton {"
+            "   font-size: 17px;"
+            "   border-radius: 13px;"
+            "   background-color: #3498db;"
+            "   color: #ffffff;"
+            "}"
+            "QPushButton:hover {"
+            "   background-color: #2980b9;"
+            "   font-size:18px;"
+            "}"
+        )
+        solve_kp_btn.clicked.connect(self.solve_knapsack)
+        buttons_layout.addWidget(solve_kp_btn)
+
+        #reset
+        reset_btn = QPushButton('reset data', self)
+        reset_btn.setFixedSize(250, 50)
+        reset_btn.setCursor(Qt.PointingHandCursor)  
+        reset_btn.setStyleSheet(
+             "QPushButton {"
+            "   font-size: 17px;"
+            "   border-radius: 13px;"
+            "   background-color: #C8CECF;"
+            "   color: #ffffff;"
+            "}"
+            "QPushButton:hover {"
+            "   background-color: #BABFC0;"
+            "   font-size:18px;"
+            "}"
+        )
+        reset_btn.clicked.connect(self.reset_data)
+        buttons_layout.addWidget(reset_btn)
+        result_layout.addLayout(buttons_layout)
+
+
+
+        # Result
+        self.outputArea = QTextEdit()
+        self.outputArea.setStyleSheet(
+            "QTextEdit {"
+            "   padding: 5px;"
+            "   border: 2px solid #A1D1E9;"
+            "   border-radius: 8px;"
+            "   font-size: 16px;"
+            "}"
+        )
+        self.outputArea.setReadOnly(True)
+        result_layout.addWidget(self.outputArea)
+        result_layout.addWidget(back_button)
+        #result_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        result_layout.setContentsMargins(0, 30, 0, 0)
+
+        main_layout.addLayout(back_layout)
+        main_layout.setSpacing(10)
+        main_layout.addLayout(input_layout)
+        main_layout.addLayout(result_layout)
+        # Set Layout
+        self.setLayout(main_layout)
+
+    def gotoHome(self):
+        self.parent.stack.setCurrentIndex(0)
+
+    def reset_data(self):
+        self.capacity_input.clear()
+        self.weights_input.clear()
+        self.values_input.clear()
+        self.outputArea.clear()
