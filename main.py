@@ -1,5 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget
+from PyQt5.QtGui import QFont, QIcon
 from HomePage import HomePage
 from KnapsackSolver import KnapsackSolver
 from TransportationSolver import TransportationSolver
@@ -13,7 +14,12 @@ class MainApp(QMainWindow):
         self.stack = QStackedWidget(self)
         self.home_page = HomePage(self)
         self.knapsack_solver = KnapsackSolver(self)
+        self.transportation_solver = TransportationSolver(self)
 
+        self.stack.addWidget(self.home_page)
+        self.stack.addWidget(self.knapsack_solver)
+        self.stack.addWidget(self.transportation_solver)
+        self.setCentralWidget(self.stack)
 
     def show_page(self, page_name):
         if page_name == "Home":
