@@ -44,3 +44,38 @@ class HomePage(QWidget):
             "}"
         )
         btn_knapsack.clicked.connect(lambda: self.parent.show_page("Knapsack"))
+   
+        btn_transportation = QPushButton('Transportation Problem')
+        btn_transportation.setFixedSize(300, 70)
+        btn_transportation.setCursor(Qt.PointingHandCursor)  
+        btn_transportation.setStyleSheet(
+            "QPushButton {"
+            "   font-size: 19px;"
+            "   border-radius: 10px;"
+            "   background-color: #3498db;"
+            "   color: #ffffff;"
+            "}"
+            "QPushButton:hover {"
+            "   background-color: #2980b9;"
+            "   font-size: 21px;"
+            "}"
+        )
+        btn_transportation.clicked.connect(lambda: self.parent.show_page("Transportation"))
+      
+        title_layout.addWidget(title_label, alignment=Qt.AlignmentFlag.AlignTop)
+        description_layout.addWidget(welcome_label, alignment=Qt.AlignmentFlag.AlignTop)
+        description_layout.addWidget(description_label, alignment=Qt.AlignmentFlag.AlignTop)
+        description_layout.addWidget(names_label, alignment=Qt.AlignmentFlag.AlignTop)
+        description_layout.setContentsMargins(50, 0, 50, 50) 
+
+        problems_layout.addWidget(btn_knapsack)
+        problems_layout.addWidget(btn_transportation)
+        problems_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        main_layout.addLayout(title_layout)
+        main_layout.addLayout(description_layout)
+        main_layout.addLayout(problems_layout)
+
+        main_layout.setContentsMargins(50, 0, 50, 50) 
+
+        self.setLayout(main_layout)
